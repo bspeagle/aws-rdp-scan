@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE nmaprun>
 <?xml-stylesheet href="file:///usr/local/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
-<!-- Nmap 7.91 scan initiated Thu May 20 14:25:03 2021 as: nmap -sV -Pn -n -p3389 -&#45;script=rdp-enum-encryption -vv -oX output.xml 54.191.20.124 -->
-<nmaprun scanner="nmap" args="nmap -sV -Pn -n -p3389 -&#45;script=rdp-enum-encryption -vv -oX output.xml 54.191.20.124" start="1621535103" startstr="Thu May 20 14:25:03 2021" version="7.91" xmloutputversion="1.05">
+<!-- Nmap 7.91 scan initiated Thu May 20 16:02:26 2021 as: nmap -sV -Pn -n -p3389 -&#45;script=rdp-enum-encryption -vv -oX output.xml 54.184.67.250 -->
+<nmaprun scanner="nmap" args="nmap -sV -Pn -n -p3389 -&#45;script=rdp-enum-encryption -vv -oX output.xml 54.184.67.250" start="1621540946" startstr="Thu May 20 16:02:26 2021" version="7.91" xmloutputversion="1.05">
 <scaninfo type="connect" protocol="tcp" numservices="1" services="3389"/>
 <verbose level="2"/>
 <debugging level="0"/>
-<taskbegin task="NSE" time="1621535103"/>
-<taskend task="NSE" time="1621535103"/>
-<taskbegin task="NSE" time="1621535103"/>
-<taskend task="NSE" time="1621535103"/>
-<taskbegin task="Connect Scan" time="1621535103"/>
+<taskbegin task="NSE" time="1621540946"/>
+<taskend task="NSE" time="1621540946"/>
+<taskbegin task="NSE" time="1621540946"/>
+<taskend task="NSE" time="1621540946"/>
+<taskbegin task="Connect Scan" time="1621540946"/>
+<taskend task="Connect Scan" time="1621540948" extrainfo="1 total ports"/>
