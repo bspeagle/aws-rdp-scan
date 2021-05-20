@@ -48,7 +48,7 @@ def parse_output():
 
 def check_rdp(ip_addr):
     try:
-        nmap_command = "nmap -sV -Pn -n -p3389 --script=rdp-enum-encryption -vv -oX output.xml " + str(ip_addr).strip()
+        nmap_command = "nmap -sV -Pn -n -p3389 --script=rdp-enum-encryption -vv -oX output.xml --append-output " + str(ip_addr).strip()
         nmap_process = subprocess.Popen(nmap_command, stdout=subprocess.PIPE, shell=True)
         nmap_process.communicate()
         parse_output()
