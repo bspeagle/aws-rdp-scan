@@ -2,7 +2,7 @@ import boto3
 import os
 import re
 import subprocess
-import xml
+import xml.dom.minidom
 
 open_re = re.compile(r"Security\slayer")
 closed_re = re.compile(r"^Received\sunhandled\spacket")
@@ -45,8 +45,8 @@ def check_rdp(ip_addr):
         nmap_process = subprocess.Popen(nmap_command, stdout=subprocess.PIPE, shell=True)
         nmap_process.communicate()
         parse_output()
-    except:
-        print("[-] Error occured while running script")
+    except Exception(ex):
+        print("[-] Error occured while running script: " + ex)
 
 ec2client_1 = boto3.client('ec2')
 region_response = ec2client_1.describe_regions()
