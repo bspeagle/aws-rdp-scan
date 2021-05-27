@@ -11,8 +11,11 @@ status_dict = {}
 output_list = []
 
 def readXMLFile(inputfilename):
-    DOMTree = xml.dom.minidom.parse(inputfilename)
-    return DOMTree
+    try:
+        DOMTree = xml.dom.minidom.parse(inputfilename)
+        return DOMTree
+    except Exception as ex:
+        print("[-] Error reading the output.xml file: " + str(ex))
 
 def parseXMLFile(DOMTree):
     try:
@@ -31,20 +34,31 @@ def parseXMLFile(DOMTree):
             rdp_status = "Inaccessible"
         else:
             rdp_status = "Undetermined"
+
+        reportFile = xml.dom.minidom.parse("report.xml")
+        reportXml = reportFile.documentElement
+        reportXml.appendChild(portscan)
+        xml_str = reportXml.toprettyxml(indent = '  ').replace("\n\n","")
+
+        with open ("report.xml", "w") as f:
+            f.write(xml_str)
+        
     except Exception as ex:
-        print("[-] Error parsing the output.xml fileL: " + str(ex))
+        print("[-] Error parsing the output.xml file: " + str(ex))
         ip_addr = ""
         rdp_status = "fail"
+    
     status_dict[ip_addr] = rdp_status
     return (ip_addr, rdp_status)
 
 def parse_output():
-    ip_addr, rdp_status = parseXMLFile(readXMLFile("output.xml"))
-    if not(rdp_status == "fail"):
-        print("[+]", str(ip_addr), "-", str(rdp_status))
+    try:
+        ip_addr, rdp_status = parseXMLFile(readXMLFile("output.xml"))
+    except Exception as ex:
+        print("[-] Error occured while parsing script: " + str(ex))
     
     output_list.append(str(ip_addr) + " - " + str(rdp_status))
-    # os.remove("output.xml")
+    os.remove("output.xml")
 
 def check_rdp(ip_addr):
     try:
@@ -55,6 +69,21 @@ def check_rdp(ip_addr):
     except Exception as ex:
         print("[-] Error occured while running script: " + str(ex))
 
+if os.path.exists('output.xml'):
+    os.remove("output.xml")
+
+if os.path.exists('report.xml'):
+    os.remove("report.xml")
+
+if os.path.exists('summary.txt'):
+    os.remove("summary.txt")
+
+root = xml.dom.minidom.Document()
+xmlRoot = root.createElement('root')
+root.appendChild(xmlRoot)
+with open("report.xml", "w") as xml_file:
+    root.writexml(xml_file)
+
 ec2client_1 = boto3.client('ec2')
 region_response = ec2client_1.describe_regions()
 
@@ -64,7 +93,17 @@ for region in region_response['Regions']:
     
     for reservation in response["Reservations"]:
         for instance in reservation["Instances"]:
-            if instance['State']['Name'] == 'running':
+            if instance['State']['Name'] == 'running' and 'PublicIpAddress' in instance:
                 check_rdp(instance['PublicIpAddress'])
+
+with open("report.xml") as filehandle:
+        lines = filehandle.readlines()
+
+with open("report.xml", 'w') as filehandle:
+    lines = filter(lambda x: x.strip(), lines)
+    filehandle.writelines(lines)   
+
+with open('summary.txt', mode='wt', encoding='utf-8') as myfile:
+    myfile.write('\n'.join(output_list))
 
 print(output_list)
